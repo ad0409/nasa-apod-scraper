@@ -1,27 +1,24 @@
 """
-An application that downloads the current NASA astronomic picture of the day (APOD).
+An application that downloads the current NASA astronomic picture of the day (APOD). 
 The picture can be i.e. processed afterwards to serve as a wallpaper.
 """
-
 import os
 import requests
 from dotenv import load_dotenv
 from urllib.parse import urlparse
 import subprocess
-from pathlib import Path  # Import Path
-from typing import Optional  # Import Optional
+from pathlib import Path # Import Path
+from typing import Optional # Import Optional
 
 BASE_URL = "https://api.nasa.gov/planetary/apod?"
-
 
 def load_config() -> str:
     """Load environment variables and return API key."""
     load_dotenv()
-    api_key: Optional[str] = os.getenv("NASA_APOD_API_KEY")
+    api_key: Optional[str] = os.getenv('NASA_APOD_API_KEY')
     if not api_key:
         raise ValueError("NASA_APOD_API_KEY is not set. Please check your .env file.")
     return api_key
-
 
 def get_APOD_data(api_key: str) -> requests.Response:
     url = f"{BASE_URL}api_key={api_key}"
@@ -29,7 +26,6 @@ def get_APOD_data(api_key: str) -> requests.Response:
     response = requests.get(url)
     response.raise_for_status()
     return response
-
 
 def process_data(response: requests.Response) -> None:
     """Strip dedicated datasets from API response and save to Windows path."""
@@ -60,16 +56,10 @@ def process_data(response: requests.Response) -> None:
         # Ensure the target directory exists on the Windows side via WSL
         # Convert Windows path to WSL path format for shell command
         windows_save_dir_wsl_format = subprocess.run(
-            ["wslpath", "-u", str(windows_save_dir)],
-            capture_output=True,
-            text=True,
-            check=True,
+            ["wslpath", "-u", str(windows_save_dir)], capture_output=True, text=True, check=True
         ).stdout.strip()
         windows_save_path_wsl_format = subprocess.run(
-            ["wslpath", "-u", str(windows_save_path)],
-            capture_output=True,
-            text=True,
-            check=True,
+            ["wslpath", "-u", str(windows_save_path)], capture_output=True, text=True, check=True
         ).stdout.strip()
 
         create_dir_command = f"mkdir -p '{windows_save_dir_wsl_format}'"
@@ -77,19 +67,11 @@ def process_data(response: requests.Response) -> None:
 
         try:
             # Create the target directory on the Windows side via WSL
-            subprocess.run(
-                create_dir_command,
-                shell=True,
-                check=True,
-                capture_output=True,
-                text=True,
-            )
+            subprocess.run(create_dir_command, shell=True, check=True, capture_output=True, text=True)
             print(f"Ensured Windows target directory exists: {windows_save_dir}")
 
             # Copy the file from WSL temp to Windows target
-            subprocess.run(
-                copy_command, shell=True, check=True, capture_output=True, text=True
-            )
+            subprocess.run(copy_command, shell=True, check=True, capture_output=True, text=True)
             print(f"Image copied to Windows: {windows_save_path}")
 
             # Optional: Clean up the temporary file in WSL
@@ -106,12 +88,10 @@ def process_data(response: requests.Response) -> None:
     else:
         print("HD Image URL not available for today.")
 
-
 def main() -> None:
     api_key = load_config()
     response = get_APOD_data(api_key)
     process_data(response)
-
 
 if __name__ == "__main__":
     main()
