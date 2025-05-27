@@ -35,7 +35,6 @@ def process_data(response: requests.Response) -> None:
     """Strip dedicated datasets from API response and save to Windows path."""
     data = response.json()
     hd_image_url: Optional[str] = data.get("hdurl")
-    title: Optional[str] = data.get("title")
 
     if hd_image_url:
         # Extract filename from the URL
