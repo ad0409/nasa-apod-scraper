@@ -2,6 +2,13 @@
 
 Ever wanted to have stunning space images as your desktop wallpaper? I certainly did! That's why I created a Python script that automatically downloads NASA's **Astronomy Picture of the Day (APOD)** and adds its scientific explanation as a text overlay.
 
+## Example Output
+
+![Perseverance Selfie with Ingenuity](assets/example-output-image.jpg)
+
+[Check original APOD post here](https://apod.nasa.gov/apod/ap250607.html)
+
+
 ## The Idea 💡
 
 NASA offers an amazing service called [APOD](https://apod.nasa.gov/apod/), where they publish a new astronomical photograph every day along with a detailed explanation. While you can manually visit the website, I wanted to automate this process and create something more: a wallpaper that not only looks beautiful but also teaches you something about space!
