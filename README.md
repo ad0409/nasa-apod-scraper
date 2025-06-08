@@ -11,7 +11,7 @@ Ever wanted to have stunning space images as your desktop wallpaper? I certainly
 
 ## The Idea 💡
 
-NASA offers an amazing service called [APOD](https://apod.nasa.gov/apod/), where they publish a new astronomical photograph every day along with a detailed explanation. While you can manually visit the website, I wanted to automate this process and create something more: a wallpaper that not only looks beautiful but also teaches you something about space!
+NASA offers an amazing service called [APOD](https://apod.nasa.gov/apod/), where they publish a new astronomical photograph every day along with a detailed explanation. While you can manually visit the website, this script automates the process and creates something more: a wallpaper that not only looks beautiful but also teaches you something about space!
 
 ## Technical Implementation 🛠️
 
@@ -102,7 +102,7 @@ This project is a Proof of Concept (POC) for downloading the NASA Astronomy Pict
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/nasa-apod-scraper.git # Remember to replace 'yourusername'
+   git clone https://github.com/ad0409/nasa-apod-scraper.git
    cd nasa-apod-scraper
    ```
 
@@ -114,7 +114,7 @@ This project is a Proof of Concept (POC) for downloading the NASA Astronomy Pict
 3. Create a `.env` file in the project root with your NASA API key and desired Windows save path:
    ```env
    NASA_APOD_API_KEY=YOUR_API_KEY
-   WINDOWS_SAVE_PATH=C:\Users\YOUR_USERNAME\Pictures\Screensaver\apod-nasa # Replace with your desired path
+   WINDOWS_SAVE_DIR=C:\Users\YOUR_USERNAME\Pictures\Screensaver\apod-nasa # Replace with your desired directory
    ```
    Get your API key from [NASA's API portal](https://api.nasa.gov/)
 
@@ -128,13 +128,13 @@ uv run main.py
 The script will:
 1. Fetch today's APOD image
 2. Add the scientific explanation as overlay
-3. Save the processed image to the path specified in the `WINDOWS_SAVE_PATH` environment variable in your `.env` file.
+3. Save the processed image to the path specified in the `WINDOWS_SAVE_DIR` environment variable in your `.env` file.
 
 ## Configuration 🔨
 
 The script is configured using environment variables in the `.env` file:
 - `NASA_APOD_API_KEY`: Your API key obtained from NASA.
-- `WINDOWS_SAVE_PATH`: The absolute path on your Windows filesystem where the processed images will be saved.
+- `WINDOWS_SAVE_DIR`: The absolute path on your Windows filesystem where the processed images will be saved.
 
 ## Error Handling 🛠️
 

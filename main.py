@@ -15,21 +15,26 @@ import textwrap
 
 BASE_URL: str = "https://api.nasa.gov/planetary/apod?"
 
-def load_config() -> str:
+def load_config() -> Tuple[str, Path]:
     """
-    Load environment variables and return API key.
+    Load environment variables and return API key and Windows save directory.
     
     Returns:
-        str: The NASA APOD API key from environment variables.
+        Tuple[str, Path]: The NASA APOD API key and Windows save directory path
         
     Raises:
-        ValueError: If NASA_APOD_API_KEY is not set in environment variables.
+        ValueError: If required environment variables are not set.
     """
     load_dotenv()
     api_key: Optional[str] = os.getenv('NASA_APOD_API_KEY')
+    windows_save_dir: Optional[str] = os.getenv('WINDOWS_SAVE_DIR')
+
     if not api_key:
         raise ValueError("NASA_APOD_API_KEY is not set. Please check your .env file.")
-    return api_key
+    if not windows_save_dir:
+        raise ValueError("WINDOWS_SAVE_DIR is not set. Please check your .env file.")
+
+    return api_key, Path(windows_save_dir)
 
 def get_api_response(api_key: str) -> requests.Response:
     """
@@ -174,20 +179,20 @@ def add_image_explanation_text(temp_save_path_wsl: Path, image_explanation_text:
         print(f"An error occurred while adding text to image: {e}")
         raise
 
-def move_image_from_wsl_to_windows(filename: str, temp_save_path_wsl: Path) -> None:
+def move_image_from_wsl_to_windows(filename: str, temp_save_path_wsl: Path, windows_save_dir: Path) -> None:
     """
     Move the processed image from WSL to Windows filesystem.
     
     Args:
         filename (str): Name of the file to move
         temp_save_path_wsl (Path): Current path of the file in WSL
+        windows_save_dir (Path): Windows directory path to save the file to
         
     Raises:
         subprocess.CalledProcessError: If a shell command fails
         IOError: If there's an error copying the file
     """
     # Define the target Windows path using pathlib
-    windows_save_dir = Path(r"C:\Users\AD\Pictures\Screensaver\apod-nasa")
     windows_save_path = windows_save_dir / filename
 
     # Convert Windows paths to WSL format
@@ -235,8 +240,8 @@ def main() -> None:
         IOError: If there are file operation errors
     """
     try:
-        # Get NASA API key and fetch APOD data
-        api_key = load_config()
+        # Get NASA API key and Windows save directory
+        api_key, windows_save_dir = load_config()
         api_response = get_api_response(api_key)
         filename, image_response, image_explanation_text = process_data(api_response)
 
@@ -246,7 +251,7 @@ def main() -> None:
         # Process and save the image
         temp_wsl_image_path = temp_save_to_wsl(filename, image_response)
         processed_image_path = add_image_explanation_text(temp_wsl_image_path, image_explanation_text)
-        move_image_from_wsl_to_windows(filename, processed_image_path)
+        move_image_from_wsl_to_windows(filename, processed_image_path, windows_save_dir)
 
     except Exception as e:
         print(f"Error in main execution: {e}")
