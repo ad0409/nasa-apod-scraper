@@ -20,4 +20,5 @@ jobs:
           uv sync
           uv pip install pytest --system
       - name: Run pytest
-        run: pytest tests/
+        run: pytest
+        working-directory: nasa-apod-scraper
