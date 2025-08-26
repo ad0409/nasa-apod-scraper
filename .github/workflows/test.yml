@@ -18,5 +18,6 @@ jobs:
           pip install uv
           uv add pytest
           uv sync
+          uv pip install pytest --system
       - name: Run pytest
         run: pytest tests/
