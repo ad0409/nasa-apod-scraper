@@ -20,4 +20,4 @@ jobs:
           uv sync
           uv pip install pytest --system
       - name: Run pytest
-        run: pytest
+        run: PYTHONPATH=$PWD pytest
