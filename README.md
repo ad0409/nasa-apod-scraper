@@ -80,23 +80,23 @@ _Note: This project is open source and available under the MIT license._
 
 # NASA APOD Scraper
 
-This project is a Proof of Concept (POC) for downloading the NASA Astronomy Picture of the Day (APOD) and saving it to a specified directory.
+This project downloads the NASA Astronomy Picture of the Day (APOD) and adds its scientific explanation as a text overlay, designed to run in WSL2 and save to Windows directories.
 
 ## Features ✨
 
 - Fetches daily images from NASA's APOD API
 - Adds scientific explanation as text overlay
 - Automatically scales text based on image size
-- Supports WSL to Windows file transfer
-- Error handling and logging
-- Type hints for better code maintainability
+- Seamless WSL2 to Windows file transfer
+- Comprehensive error handling and logging
+- Full type hints for code reliability
 
 ## Prerequisites 📋
 
-- Python 3.8 or higher
-- WSL (Windows Subsystem for Linux) if running on Windows
-- [uv](https://github.com/astral-sh/uv) package manager
-- DejaVu Sans font (Install on Debian/Ubuntu with `sudo apt-get install fonts-dejavu`)
+- Python 3.12 or higher
+- WSL2 (Windows Subsystem for Linux 2)
+- [uv](https://github.com/astral-sh/uv) package manager (`pip install uv`)
+- DejaVu Sans font (Install with `sudo apt-get install fonts-dejavu`)
 
 ## Installation 🔧
 
@@ -111,10 +111,13 @@ This project is a Proof of Concept (POC) for downloading the NASA Astronomy Pict
    uv sync
    ```
 
-3. Create a `.env` file in the project root with your NASA API key and desired Windows save path:
-   ```env
-   NASA_APOD_API_KEY=YOUR_API_KEY
-   WINDOWS_SAVE_DIR=C:\Users\YOUR_USERNAME\Pictures\Screensaver\apod-nasa # Replace with your desired directory
+3. Configure environment:
+   ```bash
+   # Copy the example environment file
+   cp .env.example .env
+   
+   # Edit with your settings
+   nano .env
    ```
    Get your API key from [NASA's API portal](https://api.nasa.gov/)
 
@@ -126,21 +129,45 @@ uv run main.py
 ```
 
 The script will:
-1. Fetch today's APOD image
-2. Add the scientific explanation as overlay
-3. Save the processed image to the path specified in the `WINDOWS_SAVE_DIR` environment variable in your `.env` file.
+1. Check if today's APOD is an image (skips videos/other media)
+2. Download the image and add scientific explanation as overlay
+3. Save the processed image to your specified Windows directory
 
 ## Configuration 🔨
 
-The script is configured using environment variables in the `.env` file:
-- `NASA_APOD_API_KEY`: Your API key obtained from NASA.
-- `WINDOWS_SAVE_DIR`: The absolute path on your Windows filesystem where the processed images will be saved.
+Configure in your `.env` file:
+```env
+# Required settings
+NASA_APOD_API_KEY=your_api_key_here
+WINDOWS_SAVE_DIR=C:\Users\YourUsername\Pictures\APOD
 
-## Error Handling 🛠️
+# Optional settings
+LOG_FILE_PATH=/custom/path/to/logs.txt  # defaults to ./logs.txt
+```
 
-The script includes comprehensive error handling for:
-- Missing environment variables
-- Failed API requests
+## Project Structure 📁
+
+```
+nasa-apod-scraper/
+├── .env.example          # Template for environment variables
+├── pyproject.toml        # Project metadata and dependencies
+├── main.py              # Main script
+└── logs.txt            # Log file (created on first run)
+```
+
+## Development 🛠️
+
+This project uses:
+- Modern Python packaging with `pyproject.toml`
+- `uv` package manager for deterministic builds
+- Type hints and docstrings throughout
+- Comprehensive error handling and logging
+
+### Error Handling
+The script handles:
+- Missing/invalid environment variables
+- API request failures
+- Non-image media types
 - Image processing errors
 - File system operations
 
@@ -158,6 +185,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments 🙏
 
-- [NASA APOD API](https://api.nasa.gov/) for providing the amazing space images
-- [Pillow](https://python-pillow.org/) for image processing capabilities
+- [NASA APOD API](https://api.nasa.gov/) for the amazing space images
+- [Pillow](https://python-pillow.org/) for image processing
 - [python-dotenv](https://github.com/theskumar/python-dotenv) for environment management
+- [uv](https://github.com/astral-sh/uv) for modern Python packaging
