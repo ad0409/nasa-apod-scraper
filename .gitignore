@@ -1,2 +1,16 @@
 *.png
 *.env
+*logs*
+assets/
+.ruff_cache/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+env/
+venv/
+ENV/
+logs.txt
