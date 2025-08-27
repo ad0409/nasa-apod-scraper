@@ -152,7 +152,7 @@ nasa-apod-scraper/
 ├── .env.example          # Template for environment variables
 ├── pyproject.toml        # Project metadata and dependencies
 ├── main.py              # Main script
-└── logs.txt            # Log file (created on first run!)
+└── logs.txt            # Log file (created on first run)
 ```
 
 ## Development 🛠️
