@@ -11,12 +11,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      - name: Install dependencies
+          python-version: '3.12'
+      - name: Install and update pip
         run: |
           python -m pip install --upgrade pip
+      - name: Install uv and update dependencies
+        run: | 
           pip install uv
-          uv pip install .
-          uv pip install pytest
+          uv pip install -e . --system
       - name: Run pytest
-        run: pytest tests/
+        run: PYTHONPATH=$PWD pytest
