@@ -16,7 +16,7 @@ Ensure the following tools are installed on your system:
 
 - **Python 3.12 or higher**: [Download Python](https://www.python.org/downloads/)
 - **Git**: [Download Git](https://git-scm.com/downloads)
-- **uv**: Install via [winget](https://docs.astral.sh/uv/installation/#windows) (recommended for Windows):
+- **uv**: Open Microsoft PowerShell (press `Win + X`, then `i`) or your preferred IDE terminal, and run:
   ```powershell
   winget install --id=astral-sh.uv -e
   ```
@@ -49,7 +49,7 @@ Follow these tutorials to set up the prerequisites:
    uv sync
    ```
 
-5. **Configure Environment**:
+4. **Configure Environment**:
    - Copy the example environment file:
      ```powershell
      copy .env.example .env
@@ -69,18 +69,39 @@ Follow these tutorials to set up the prerequisites:
      ```
    - Hit **Save** and exit the editor.
 
-6. **Prepare the Batch File**:
+5. **Prepare the Batch File**:
    - Copy the example batch file:
      ```powershell
      copy run_main.bat.example run_main.bat
      ```
-   - Ensure the batch file points to the correct Python executable and project path if needed.
+   - Open the `run_main.bat` file in a text editor and change the directory to the project root path you set previously.
+   - Save and close the file.
 
-7. **Run the Script**:
+6. **Run the Script**:
    Execute the script using:
    ```powershell
    uv run main.py
    ```
+
+## Setting Up Windows Background 🎨
+
+To use the downloaded images as your desktop wallpaper, follow these steps:
+
+1. **Open Windows Personalisation Settings**:
+   - Right-click on the desktop and select **Personalise**.
+
+2. **Set Background to Slideshow**:
+   - Under the **Background** section, select **Slideshow** from the dropdown menu.
+
+3. **Choose the Folder**:
+   - Click **Browse** and navigate to the folder where the images are saved (e.g., `C:\Users\YourUsername\Pictures\APOD`).
+
+4. **Adjust Slideshow Settings**:
+   - Set the time interval for changing wallpapers (e.g., every 1 minute).
+   - Enable **Shuffle** to randomize the wallpapers.
+
+5. **Save Settings**:
+   - Close the settings window, and your desktop will now display the downloaded images as a slideshow.
 
 ## Automating with Windows Task Scheduler 🕒
 
