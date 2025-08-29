@@ -2,6 +2,12 @@
 
 This project automates the download of NASA's Astronomy Picture of the Day (APOD) and overlays its scientific explanation as text on the image. Designed for Windows, it supports automation via the Windows Task Scheduler.
 
+## Example Output
+
+![Example Output](assets/example-output-image.jpg)
+
+[Check original APOD post here](https://apod.nasa.gov/apod/ap250607.html)
+
 ## Features ✨
 
 - Fetches daily images from NASA's APOD API
@@ -74,7 +80,11 @@ Follow these tutorials to set up the prerequisites:
      ```powershell
      copy run_main.bat.example run_main.bat
      ```
-   - Open the `run_main.bat` file in a text editor and change the directory to the project root path you set previously.
+   - Open the `run_main.bat` file in a text editor and ensure the directory points to the project root path. For example:
+     ```bat
+     cd C:\Users\YourUsername\Documents\dev\nasa-apod-scraper
+     "C:\Users\YourUsername\Documents\dev\nasa-apod-scraper\.venv\Scripts\python.exe" -m uv run main.py
+     ```
    - Save and close the file.
 
 6. **Run the Script**:
@@ -87,8 +97,8 @@ Follow these tutorials to set up the prerequisites:
 
 To use the downloaded images as your desktop wallpaper, follow these steps:
 
-1. **Open Windows Personalisation Settings**:
-   - Right-click on the desktop and select **Personalise**.
+1. **Open Windows Personalization Settings**:
+   - Right-click on the desktop and select **Personalize**.
 
 2. **Set Background to Slideshow**:
    - Under the **Background** section, select **Slideshow** from the dropdown menu.
