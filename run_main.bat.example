@@ -1,0 +1,9 @@
+@echo off
+REM Example batch file for running the NASA APOD scraper
+REM Replace the paths below with your actual project directory and virtual environment setup
+
+REM Change directory to the project root
+cd C:\Path\To\Your\Project\Directory
+
+REM Run the script using uv
+uv run main.py

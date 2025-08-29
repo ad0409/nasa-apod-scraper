@@ -1,149 +1,108 @@
-# Building an Automated NASA Picture Downloader 🚀
+# NASA APOD Scraper 🚀
 
-Ever wanted to have stunning space images as your desktop wallpaper? I certainly did! That's why I created a Python script that automatically downloads NASA's **Astronomy Picture of the Day (APOD)** and adds its scientific explanation as a text overlay.
-
-## Example Output
-
-![Perseverance Selfie with Ingenuity](assets/example-output-image.jpg)
-
-[Check original APOD post here](https://apod.nasa.gov/apod/ap250607.html)
-
-
-## The Idea 💡
-
-NASA offers an amazing service called [APOD](https://apod.nasa.gov/apod/), where they publish a new astronomical photograph every day along with a detailed explanation. While you can manually visit the website, this script automates the process and creates something more: a wallpaper that not only looks beautiful but also teaches you something about space!
-
-## Technical Implementation 🛠️
-
-### 1. Getting Started with NASA's API
-
-First, I needed to interact with NASA's API. This required:
-- Setting up a free **NASA API key** (you can get one [here](https://api.nasa.gov/))
-- Using Python's `requests` library to fetch the daily image data
-- Implementing proper error handling for API responses
-
-### 2. Image Processing
-
-The project got more interesting when I added these features:
-- Using **Pillow** (Python Imaging Library) to process the images
-- Implementing text wrapping with `textwrap` to make the explanation readable
-- Calculating the optimal font size based on image dimensions
-- Positioning the text overlay in a way that doesn't interfere with the main image
-
-### 3. Cross-Platform Compatibility
-
-One challenge was making this work seamlessly between **WSL** (Windows Subsystem for Linux) and Windows:
-- Creating temporary storage in the WSL filesystem
-- Converting paths between WSL and Windows formats
-- Ensuring proper file handling across different operating systems
-
-## Code Structure and Best Practices 📝
-
-I structured the code following several key principles:
-- **Type hints** for better code maintainability
-- Clear function documentation using docstrings
-- Proper error handling with specific exception types
-- Modular design with single-responsibility functions
-
-Here's a quick look at the main workflow:
-1. Load configuration and API key
-2. Fetch the daily image data from NASA
-3. Download and process the image
-4. Add the explanation text overlay
-5. Save the final image in the desired location
-
-## Learning Outcomes 🎓
-
-This project helped me improve my skills in:
-- **API Integration**: Working with REST APIs and handling responses
-- **Image Processing**: Using Pillow for image manipulation
-- **Cross-Platform Development**: Managing files across different operating systems
-- **Python Best Practices**: Type hinting, documentation, and error handling
-
-## Future Improvements 🔮
-
-I'm planning to add:
-- Automatic wallpaper rotation
-- Custom text styling options
-- Support for different image aspect ratios
-- A simple GUI for configuration
-
-## Try It Yourself! 🚀
-
-Want to give it a try? Check out the [project repository](https://github.com/ad0409/nasa-apod-scraper) and follow the setup instructions. Don't forget to create your `.env` file with your NASA API key!
-
-Feel free to contribute or suggest improvements. Happy space exploring! 🌠
-
----
-
-_Note: This project is open source and available under the MIT license._
-
-# NASA APOD Scraper
-
-This project downloads the NASA Astronomy Picture of the Day (APOD) and adds its scientific explanation as a text overlay, designed to run in WSL2 and save to Windows directories.
+This project automates the download of NASA's Astronomy Picture of the Day (APOD) and overlays its scientific explanation as text on the image. Designed for Windows, it supports automation via the Windows Task Scheduler.
 
 ## Features ✨
 
 - Fetches daily images from NASA's APOD API
 - Adds scientific explanation as text overlay
 - Automatically scales text based on image size
-- Seamless WSL2 to Windows file transfer
 - Comprehensive error handling and logging
 - Full type hints for code reliability
 
 ## Prerequisites 📋
 
-- Python 3.12 or higher
-- WSL2 (Windows Subsystem for Linux 2)
-- [uv](https://github.com/astral-sh/uv) package manager (`pip install uv`)
-- DejaVu Sans font (Install with `sudo apt-get install fonts-dejavu`)
+Ensure the following tools are installed on your system:
 
-## Installation 🔧
+- **Python 3.12 or higher**: [Download Python](https://www.python.org/downloads/)
+- **Git**: [Download Git](https://git-scm.com/downloads)
+- **uv**: Install via [winget](https://docs.astral.sh/uv/installation/#windows) (recommended for Windows):
+  ```powershell
+  winget install --id=astral-sh.uv -e
+  ```
 
-1. Clone the repository:
-   ```bash
+### Need Help Setting Up?
+
+Follow these tutorials to set up the prerequisites:
+- [Installing Python on Windows](https://docs.python.org/3/using/windows.html)
+- [Installing Git on Windows](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- [Getting Started with uv](https://docs.astral.sh/uv/getting-started/)
+
+## Setting Up the Project 🔧
+
+1. **Clone the Repository**:
+   Open Microsoft PowerShell (press `Win + X`, then `i`) or your preferred IDE terminal, and run:
+   ```powershell
    git clone https://github.com/ad0409/nasa-apod-scraper.git
    cd nasa-apod-scraper
    ```
 
-2. Install dependencies:
-   ```bash
+2. **Pin Python Version**:
+   Ensure the project uses the correct Python version:
+   ```powershell
+   uv python pin 3.12
+   ```
+
+3. **Install Dependencies**:
+   Sync the project dependencies:
+   ```powershell
    uv sync
    ```
 
-3. Configure environment:
-   ```bash
-   # Copy the example environment file
-   cp .env.example .env
-   
-   # Edit with your settings
-   nano .env
+5. **Configure Environment**:
+   - Copy the example environment file:
+     ```powershell
+     copy .env.example .env
+     ```
+   - Open the `.env` file in a text editor:
+     ```powershell
+     notepad .env
+     ```
+   - Edit the file with your settings (e.g., NASA API key). Example configuration:
+     ```env
+     # Required settings
+     NASA_APOD_API_KEY=your_api_key_here
+     WINDOWS_SAVE_DIR=C:\Users\YourUsername\Pictures\APOD
+
+     # Optional settings
+     LOG_FILE_PATH=C:\Users\YourUsername\Documents\dev\nasa-apod-scraper\logs.txt  # defaults to ./logs.txt
+     ```
+   - Hit **Save** and exit the editor.
+
+6. **Prepare the Batch File**:
+   - Copy the example batch file:
+     ```powershell
+     copy run_main.bat.example run_main.bat
+     ```
+   - Ensure the batch file points to the correct Python executable and project path if needed.
+
+7. **Run the Script**:
+   Execute the script using:
+   ```powershell
+   uv run main.py
    ```
-   Get your API key from [NASA's API portal](https://api.nasa.gov/)
 
-## Usage 💻
+## Automating with Windows Task Scheduler 🕒
 
-Run the script:
-```bash
-uv run main.py
-```
+To automate the script execution daily, follow these steps:
 
-The script will:
-1. Check if today's APOD is an image (skips videos/other media)
-2. Download the image and add scientific explanation as overlay
-3. Save the processed image to your specified Windows directory
+1. **Open Task Scheduler**:
+   - Press `Win + R`, type `taskschd.msc`, and press Enter.
 
-## Configuration 🔨
+2. **Create a New Task**:
+   - Click **Create Task**.
+   - Under the **General** tab, provide a name (e.g., `NASA APOD Scraper`) and select **Run with highest privileges**.
 
-Configure in your `.env` file:
-```env
-# Required settings
-NASA_APOD_API_KEY=your_api_key_here
-WINDOWS_SAVE_DIR=C:\Users\YourUsername\Pictures\APOD
+3. **Set the Trigger**:
+   - Go to the **Triggers** tab and click **New**.
+   - Set the task to run daily at your preferred time.
 
-# Optional settings
-LOG_FILE_PATH=/custom/path/to/logs.txt  # defaults to ./logs.txt
-```
+4. **Set the Action**:
+   - Go to the **Actions** tab and click **New**.
+   - Select **Start a program** and browse to the `run_main.bat` file.
+
+5. **Save and Test**:
+   - Save the task and test it by right-clicking the task and selecting **Run**.
 
 ## Project Structure 📁
 
@@ -151,8 +110,9 @@ LOG_FILE_PATH=/custom/path/to/logs.txt  # defaults to ./logs.txt
 nasa-apod-scraper/
 ├── .env.example          # Template for environment variables
 ├── pyproject.toml        # Project metadata and dependencies
-├── main.py              # Main script
-└── logs.txt            # Log file (created on first run)
+├── main.py               # Main script
+├── run_main.bat.example  # Example batch file for automation
+└── logs.txt              # Log file (created on first run)
 ```
 
 ## Development 🛠️
