@@ -80,11 +80,7 @@ Follow these tutorials to set up the prerequisites:
      ```powershell
      copy run_main.bat.example run_main.bat
      ```
-   - Open the `run_main.bat` file in a text editor and ensure the directory points to the project root path. For example:
-     ```bat
-     cd C:\Users\YourUsername\Documents\dev\nasa-apod-scraper
-     "C:\Users\YourUsername\Documents\dev\nasa-apod-scraper\.venv\Scripts\python.exe" -m uv run main.py
-     ```
+   - Open the `run_main.bat` file in a text editor and change the directory to the project root path you set previously.
    - Save and close the file.
 
 6. **Run the Script**:
