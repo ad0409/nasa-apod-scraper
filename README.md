@@ -27,6 +27,23 @@ Ensure the following tools are installed on your system:
   winget install --id=astral-sh.uv -e
   ```
 
+### Verify Installation
+
+After installing the prerequisites, verify their installation by running the following commands in a fresh terminal:
+
+- Check Python version:
+  ```powershell
+  python --version
+  ```
+- Check Git version:
+  ```powershell
+  git --version
+  ```
+- Check uv installation:
+  ```powershell
+  uv --version
+  ```
+
 ### Need Help Setting Up?
 
 Follow these tutorials to set up the prerequisites:
@@ -39,7 +56,7 @@ Follow these tutorials to set up the prerequisites:
 1. **Clone the Repository**:
    Open Microsoft PowerShell (press `Win + X`, then `i`) or your preferred IDE terminal, and run:
    ```powershell
-   git clone https://github.com/ad0409/nasa-apod-scraper.git
+   git clone -b windows-main https://github.com/ad0409/nasa-apod-scraper.git
    cd nasa-apod-scraper
    ```
 
@@ -88,6 +105,12 @@ Follow these tutorials to set up the prerequisites:
    ```powershell
    uv run main.py
    ```
+
+   ### What Happens:
+   - The program starts and fetches the Astronomy Picture of the Day (APOD).
+   - A new folder will be created at the path specified in your `.env` file (e.g., `C:\Users\YourUsername\Pictures\APOD`) if it does not already exist.
+   - The image will be saved in the specified folder. If the folder already exists, the image will simply be added to it.
+   - A `logs.txt` file will be created in the project root directory, containing detailed information about the script's execution.
 
 ## Setting Up Windows Background 🎨
 
