@@ -78,9 +78,9 @@ def get_api_response(api_key: str) -> requests.Response:
 
 def process_data(
     response: requests.Response
-) -> Tuple[Optional[str], Optional[requests.Response], Optional[str], Optional[str]]:
+) -> Tuple[Optional[str], Optional[requests.Response], Optional[str], Optional[str], Optional[str]]:
     """
-    Extract image URL and explanation text from API response.
+    Extract image URL, explanation text, and title from API response.
 
     Args:
         response (requests.Response): Response from NASA APOD API.
@@ -91,15 +91,17 @@ def process_data(
             - Optional[requests.Response]: Response from image download request
             - Optional[str]: Explanation text for the image
             - Optional[str]: Media type of the APOD (e.g., "image", "video")
+            - Optional[str]: Title of the APOD
     """
     data = response.json()
     media_type: Optional[str] = data.get("media_type")
     hd_image_url: Optional[str] = data.get("hdurl")
     image_explanation_text: Optional[str] = data.get("explanation")
+    image_title: Optional[str] = data.get("title")
 
     if media_type != "image":
         logging.info("Media type is '%s'. No image to process.", media_type)
-        return None, None, image_explanation_text, media_type
+        return None, None, image_explanation_text, media_type, image_title
 
     filename = (
         urlparse(hd_image_url).path.split("/")[-1] if hd_image_url else None
@@ -113,7 +115,7 @@ def process_data(
         except requests.RequestException as e:
             logging.error("Image download failed: %s", e)
 
-    return filename, image_response, image_explanation_text, media_type
+    return filename, image_response, image_explanation_text, media_type, image_title
 
 def save_image_to_windows(
     filename: str, image_response: requests.Response, windows_save_dir: Path
@@ -146,14 +148,15 @@ def save_image_to_windows(
     return save_path
 
 def add_image_explanation_text(
-    image_path: Path, image_explanation_text: Optional[str]
+    image_path: Path, image_explanation_text: Optional[str], image_title: Optional[str]
 ) -> Path:
     """
-    Open an image, add wrapped explanation text to the bottom left quadrant, and save it.
+    Open an image, add title and wrapped explanation text to the bottom left quadrant, and save it.
 
     Args:
         image_path (Path): Path to the image file
-        image_explanation_text (Optional[str]): Text to add to the image, if any
+        image_explanation_text (Optional[str]): Explanation text to add to the image, if any
+        image_title (Optional[str]): Title to add to the image, if any
 
     Returns:
         Path: Path to the modified image
@@ -164,53 +167,41 @@ def add_image_explanation_text(
     """
     try:
         image = Image.open(image_path)
-        if not image_explanation_text:
+
+        if not image_explanation_text and not image_title:
             return image_path
 
         draw = ImageDraw.Draw(image)
         img_width, img_height = image.size
 
-        # Define the bottom-left quadrant dimensions
-        quadrant_width = img_width // 2
-        quadrant_height = img_height // 2
-
-        # Dynamically calculate font size to fit the text within the quadrant
-        font_size = INITIAL_FONT_SIZE  # Use named constant for initial font size
+        text_color = (255, 255, 255)
+        font_size = max(int(img_height / 60), MIN_FONT_SIZE)
         font = ImageFont.truetype(FONT_PATH, font_size)
 
-        # Estimate average character width for the current font
-        avg_char_width = font.getlength("A") if hasattr(font, "getlength") else 10
-        wrapping_width = max(10, int(quadrant_width // avg_char_width))
+        max_text_width = int(img_width * 0.5)
+        chars_per_line = max_text_width // (font_size // 2) if font_size > 0 else 80
 
-        wrapped_text = textwrap.fill(image_explanation_text, width=wrapping_width)
+        wrapped_title = textwrap.fill(image_title, width=chars_per_line) if image_title else ""
+        wrapped_explanation = textwrap.fill(image_explanation_text, width=chars_per_line) if image_explanation_text else ""
+        combined_text = f"{wrapped_title}\n\n{wrapped_explanation}" if wrapped_title else wrapped_explanation
 
-        while font_size > MIN_FONT_SIZE:
-            text_bbox = draw.textbbox((0, 0), wrapped_text, font=font)
-            text_width = text_bbox[2] - text_bbox[0]
-            text_height = text_bbox[3] - text_bbox[1]
+        padding = 20
+        text_bbox = draw.textbbox((0, 0), combined_text, font=font)
+        text_height = text_bbox[3] - text_bbox[1]
 
-            if text_width <= quadrant_width and text_height <= quadrant_height:
-                break
+        x_position, y_position = padding, max(0, img_height - text_height - padding)
 
-            font_size -= 1
-            font = ImageFont.truetype(FONT_PATH, font_size)
-
-        # Position the text within the bottom-left quadrant
-        x_position = 20  # Padding from the left edge
-        y_position = img_height - quadrant_height + 20  # Padding from the top of the quadrant
-
-        draw.multiline_text(
-            (x_position, y_position), wrapped_text, fill=(255, 255, 255), font=font
-        )
+        draw.multiline_text((x_position, y_position), combined_text, fill=text_color, font=font)
         image.save(image_path)
-
         logging.info("Explanation text added and saved to: %s", image_path)
+
         return image_path
+
     except FileNotFoundError:
         logging.error("Image file not found at %s", image_path)
         raise
-    except OSError as e:
-        logging.error("Error adding text to image: %s", e)
+    except Exception as e:
+        logging.error("An error occurred while adding text to image: %s", e)
         raise
 
 def main() -> None:
@@ -227,7 +218,7 @@ def main() -> None:
             )
             return
 
-        filename, image_response, image_explanation_text, media_type = process_data(
+        filename, image_response, image_explanation_text, media_type, image_title = process_data(
             api_response
         )
 
@@ -238,7 +229,7 @@ def main() -> None:
         image_path = save_image_to_windows(
             filename, image_response, windows_save_dir
         )
-        add_image_explanation_text(image_path, image_explanation_text)
+        add_image_explanation_text(image_path, image_explanation_text, image_title)
     except ValueError as ve:
         logging.error("Configuration error: %s", ve)
     except requests.RequestException as re:
