@@ -26,6 +26,7 @@ Ensure the following tools are installed on your system:
   ```powershell
   winget install --id=astral-sh.uv -e
   ```
+- **NASA APOD API Key**: Obtain a free API key from [NASA's API Portal](https://api.nasa.gov/).
 
 ### Verify Installation
 
